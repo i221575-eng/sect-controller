@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth/next"
 import { Policy as PolicyModel } from "@/models/policy";
 import { clientSideEditAccess } from "@/utils/userEditAccess";
 
-export const PUT = async (req: Request, { params } : { params: { id: string } }) => {
+export const PUT = async (req: Request, { params } : { params: Promise<{ id: string }> }) => {
     try {
         const session = await getServerSession(options);
         const ownRole = session?.user?.role;
@@ -14,7 +14,7 @@ export const PUT = async (req: Request, { params } : { params: { id: string } })
         }
 
         try {
-            const policyId = params.id;
+            const { id: policyId } = await params;
             const { name, description, type, ids, resourceIds } = await req.json();
             await connectDB();
             
@@ -40,7 +40,7 @@ export const PUT = async (req: Request, { params } : { params: { id: string } })
     }
 }
 
-export const DELETE = async (req: Request, { params } : { params: { id: string } }) => {
+export const DELETE = async (req: Request, { params } : { params: Promise<{ id: string }> }) => {
     try {
         const session = await getServerSession(options);
         const ownRole = session?.user?.role;
@@ -49,7 +49,7 @@ export const DELETE = async (req: Request, { params } : { params: { id: string }
         }
 
         try {
-            const policyId = params.id;
+            const { id: policyId } = await params;
             await connectDB();
             const policy = await PolicyModel.deleteOne({ _id: policyId });
             if (!policy) {
