@@ -9,4 +9,4 @@ const groupSchema = new Schema({
     },
 })
 
-export const Group: mongoose.Model<any> = mongoose.models['Group'] || mongoose.model('Group', groupSchema);
+export const Group: mongoose.Model<any> = mongoose.models['Group'] || mongoose.model<any>('Group', groupSchema);

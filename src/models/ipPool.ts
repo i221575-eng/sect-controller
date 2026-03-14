@@ -13,4 +13,4 @@ const ipPoolSchema = new Schema({
     }
 })
 
-export const ipPool: mongoose.Model<any> = mongoose.models['IpPool'] || mongoose.model('IpPool', ipPoolSchema);
+export const ipPool: mongoose.Model<any> = mongoose.models['IpPool'] || mongoose.model<any>('IpPool', ipPoolSchema);

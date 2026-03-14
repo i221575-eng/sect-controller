@@ -13,4 +13,4 @@ const networkSchema = new Schema({
     }
 })
 
-export const Network: mongoose.Model<any> = mongoose.models['Network'] || mongoose.model('Network', networkSchema);
+export const Network: mongoose.Model<any> = mongoose.models['Network'] || mongoose.model<any>('Network', networkSchema);
