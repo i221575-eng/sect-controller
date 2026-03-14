@@ -37,5 +37,5 @@ const resourceSchema = new Schema({
     }
 })
 
-export const Resource = mongoose.models.Resource || mongoose.model('Resource', resourceSchema);
+export const Resource = (mongoose.models.Resource || mongoose.model('Resource', resourceSchema)) as mongoose.Model<any>;
 

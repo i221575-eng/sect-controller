@@ -29,4 +29,4 @@ const connectorSchema = new Schema({
     }
 })
 
-export const Connector = mongoose.models.Connector || mongoose.model('Connector', connectorSchema);
+export const Connector = (mongoose.models.Connector || mongoose.model('Connector', connectorSchema)) as mongoose.Model<any>;

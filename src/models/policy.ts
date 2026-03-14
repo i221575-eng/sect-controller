@@ -21,5 +21,5 @@ const PolicySchema = new Schema({
     }
 })
 
-export const Policy = mongoose.models.Policy || mongoose.model('Policy', PolicySchema);
+export const Policy = (mongoose.models.Policy || mongoose.model('Policy', PolicySchema)) as mongoose.Model<any>;
 
