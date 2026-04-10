@@ -1,9 +1,7 @@
 import type { NextAuthOptions } from 'next-auth'
 import GitHubProvider from 'next-auth/providers/github'
-import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { GithubProfile } from 'next-auth/providers/github'
-import { GoogleProfile } from 'next-auth/providers/google'
 import { connectDB } from '@/utils/db'
 import { User } from '@/models/user'
 
@@ -32,31 +30,12 @@ export const options: NextAuthOptions = {
             },
             clientId: process.env.GITHUB_ID as string,
             clientSecret: process.env.GITHUB_SECRET as string,
+            // GitHub now sends an `iss` parameter in OAuth callbacks that next-auth v4
+            // mistakenly treats as an OIDC issuer check — which fails because GitHub
+            // OAuth is not OIDC. Limiting checks to ["state"] skips the issuer validation.
+            checks: ["state"],
         }),
-        GoogleProvider({
-            async profile(profile: GoogleProfile) {
-                await connectDB();
-                const user = await User.findOne({ email: profile.email });
-                let role = "unauthorized";
-                if (user && user.status) {
-                    role = user.role;
-                    await User.findOneAndUpdate({ email: profile.email }, {
-                        name: profile.name,
-                        image: profile.picture,
-                    });
-                }
-                return {
-                    ...profile,
-                    id: profile.sub,
-                    name: profile.name,
-                    email: profile.email,
-                    image: profile.picture,
-                    role: role,
-                }
-            },
-            clientId: process.env.GOOGLE_ID as string,
-            clientSecret: process.env.GOOGLE_SECRET as string,
-        }),
+        // GoogleProvider removed — add GOOGLE_ID and GOOGLE_SECRET to .env.local to re-enable
         CredentialsProvider({
             name: "Credentials",
             credentials: {
