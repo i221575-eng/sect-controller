@@ -1,3 +1,5 @@
+page.tx
+
 "use client"
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -29,8 +31,7 @@ export default function Profile() {
                 }
 
                 if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.error || 'Failed to fetch tokens');
+                    throw new Error('Failed to fetch tokens');
                 }
 
                 const data = await response.json();
@@ -39,7 +40,7 @@ export default function Profile() {
 
                 // Try to send to client app (optional, will fail silently if not running)
                 try {
-                    const clientRes = await fetch('http://localhost:8080/callback', {
+                    await fetch('http://localhost:8080/callback', {
                         method: 'POST',
                         mode: 'cors',
                         headers: {
@@ -47,18 +48,13 @@ export default function Profile() {
                         },
                         body: JSON.stringify(data),
                     });
-                    
-                    if (clientRes.ok) {
-                        // Redirect browser to client success page
-                        window.location.href = 'http://localhost:8080/success';
-                    }
                 } catch (e) {
                     // Client app not running, that's okay
                     console.log('Client app not running on port 8080');
                 }
-            } catch (err: any) {
-                console.error('Error:', err);
-                setError(err.message || 'Failed to fetch tokens. Please try logging in again.');
+            } catch (error) {
+                console.error('Error:', error);
+                setError('Failed to fetch tokens. Please try logging in again.');
                 setLoading(false);
             }
         };
